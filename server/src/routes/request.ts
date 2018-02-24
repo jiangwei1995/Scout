@@ -1,5 +1,5 @@
 import fetch from 'node-fetch'
-import { inspect } from 'util'
+import {inspect} from 'util'
 import arrayToHeaders from '../utils/arrayToHeaders'
 
 export = (server) => {
@@ -24,15 +24,30 @@ export = (server) => {
       .then((_body) => {
         const isJSON = req.body.readType === 'json'
         const body = isJSON ? JSON.parse(_body) : _body
-        const beautifiedBody = isJSON ? inspect(body, { colors: true }) : body
-        res.send({
-          status: 'OK',
-          statusCode,
-          statusText,
-          responseTime,
-          body,
-          beautifiedBody,
-        })
+        const beautifiedBody = isJSON ? inspect(body, {colors: true}) : body
+        if (Math.round(statusCode / 100) === 2 || Math.round(statusCode / 100) === 3) {
+          res.send({
+            status: 'OK',
+            statusCode,
+            statusText,
+            responseTime,
+            body,
+            beautifiedBody,
+          })
+        } else if (Math.round(statusCode / 100) === 4 || Math.round(statusCode / 100) === 5) {
+          res.send({
+            status: 'Error',
+            name: statusText,
+            message: body,
+          })
+        }else {
+          res.send({
+            status: 'Error',
+            name: statusText,
+            message: body,
+          })
+        }
+
       })
       .catch((err) => {
         res.send({

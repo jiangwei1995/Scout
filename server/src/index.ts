@@ -1,6 +1,7 @@
 import * as restify from 'restify'
 import * as path from 'path'
 import * as corsMiddleware from 'restify-cors-middleware'
+
 const cors = corsMiddleware({
   origins: ['http://localhost:3000'],
   allowHeaders: [],
@@ -25,7 +26,9 @@ server.get(/\/?.*/, restify.plugins.serveStatic({
   directory: path.join(__dirname, '../../client/build'),
   default: 'index.html',
 }))
-server.listen(3001)
+server.listen(3001, () => {
+  console.log("listen 3001");
+})
 
 
 import * as Squad from './models/Squad'
